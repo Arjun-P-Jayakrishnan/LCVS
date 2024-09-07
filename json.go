@@ -8,17 +8,18 @@ import (
 
 func respondWithJSON(w http.ResponseWriter,code int,payload interface{}){
     
+  // marshall the data recieved into the format required
   dat,err := json.Marshal(payload)
 
   if err!=nil {
-
     log.Printf("Failed to marshal JSON resposnse : %v",payload)
-    w.WriteHeader(500)
-    
+
+    //respond with 500 to let them know its a server error
+    w.WriteHeader(500) 
     return
   }
 
-  w.Header().Add("Content-Type","applicatio/json")
+  w.Header().Add("Content-Type","application/json")
   w.WriteHeader(code)
   w.Write(dat)
 
@@ -33,7 +34,7 @@ func respondWithError(w http.ResponseWriter,code int,msg string){
     }
 
     type errResponse struct{
-        Error string `json:error`
+        Error string `json:"error"`
     }
     
     respondWithJSON(w,code,errResponse{
