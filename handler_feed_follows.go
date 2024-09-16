@@ -35,7 +35,7 @@ func (apiCfg *apiConfig) handlerCreateFeedFollow(w http.ResponseWriter, r *http.
 	})
 
 	if err != nil{
-		respondWithError(w, 400, fmt.Sprintf("Couldn't Create feed %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Couldn't Create feed follow %v", err))
 	}
 
   respondWithJSON(w,200,databaseFeedToFeed(feed))
