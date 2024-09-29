@@ -1,10 +1,10 @@
 package main
 
-import (	
-  "github.com/Arjun-P-Jayakrishnan/LCVS/ui"
+import (
+	
+	"github.com/Arjun-P-Jayakrishnan/LCVS/ui"
 )
 
 func main() {
- handler.runRouter()
-  ui.runApp()
+  ui.RunApp()
 }
