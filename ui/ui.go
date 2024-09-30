@@ -1,60 +1,95 @@
 package ui
 
 import (
-	"image/color"
 	"log"
 	"os"
 
 	"gioui.org/app"
-	"gioui.org/text"
-  "gioui.org/op"
+	"gioui.org/layout"
+	"gioui.org/op"
+	"gioui.org/unit"
+	"gioui.org/widget"
 	"gioui.org/widget/material"
 )
 
 func RunApp() {
 
-	window := new(app.Window)
-  err := run(window)
+  go createWindow()
+  app.Main()
+}
+
+func createWindow() {
+
+  window := new(app.Window)
+  window.Option(app.Title(""))
+  window.Option(app.Size(unit.Dp(400),unit.Dp(600)))
+
+
+  err:= run(window)
 
   if err!=nil {
-      log.Fatal(err)
+  log.Fatal(err)
   }
 
   os.Exit(0)
 
-  app.Main()
 }
 
 
 func run(window *app.Window) error {
 
-  theme:= material.NewTheme()
+ 
 
+  //ops are operations from ui
   var ops op.Ops
 
+  // button is a clickable type
+  var startButton widget.Clickable
+
+  // defines the style and theme
+  theme:= material.NewTheme()
+
+
+  // Listen for events in window
   for {
-      switch e:= window.Event().(type) {
       
+
+    //grab the event
+      evt := window.Event()
+      
+      //decide the type
+      switch typ:= evt.(type) {
+      
+        //this is sent when application should exit
       case app.DestroyEvent:
-        return e.Err
+        return typ.Err
+
+      // this is sent when application should re-render
       case app.FrameEvent:
 
-        gtx := app.NewContext(&ops,e)
+        gtx := app.NewContext(&ops,typ)
+      
+
+        layout.Flex{
+          Axis:layout.Vertical,
+          Spacing: layout.SpaceStart,
+        }.Layout(gtx,
+
+          layout.Rigid(
+              func (gtx layout.Context) layout.Dimensions{  
+                  btn := material.Button(theme,&startButton,"start")
+                  return btn.Layout(gtx)
+              },
+          ),
 
 
-        title:= material.H1(theme,"Gui")
+        layout.Rigid(
+          layout.Spacer{Height:unit.Dp(25)}.Layout,
+        ),
 
+        )
 
-        maroon := color.NRGBA{R:127,G:0,B:0,A:255}
-
-        title.Color = maroon
-
-        title.Alignment = text.Middle
-
-        title.Layout(gtx)
-
-        e.Frame(gtx.Ops)
-
+        typ.Frame(gtx.Ops)
 
 
       }
