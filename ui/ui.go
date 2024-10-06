@@ -1,14 +1,15 @@
 package ui
 
 import (
-	"image/color"
 	"log"
 	"os"
 	"time"
 
 	"gioui.org/app"
-	"gioui.org/text"
-  "gioui.org/op"
+	"gioui.org/layout"
+	"gioui.org/op"
+	"gioui.org/unit"
+	"gioui.org/widget"
 	"gioui.org/widget/material"
 )
 
@@ -21,16 +22,6 @@ var isBoiling bool
 
 func RunApp() {
 
-<<<<<<< Updated upstream
-	window := new(app.Window)
-  err := run(window)
-
-  if err!=nil {
-      log.Fatal(err)
-  }
-
-  os.Exit(0)
-=======
 	go createWindow()
 
 	createChannelForBar()
@@ -50,9 +41,7 @@ func createWindow() {
 	}
 
 	os.Exit(0)
->>>>>>> Stashed changes
 
-  app.Main()
 }
 
 func draw(window *app.Window) error {
@@ -60,20 +49,6 @@ func draw(window *app.Window) error {
 	//ops are operations from ui
 	var ops op.Ops
 
-<<<<<<< Updated upstream
-  theme:= material.NewTheme()
-
-  var ops op.Ops
-
-  for {
-      switch e:= window.Event().(type) {
-      
-      case app.DestroyEvent:
-        return e.Err
-      case app.FrameEvent:
-
-        gtx := app.NewContext(&ops,e)
-=======
 	// button is a clickable type
 	var startButton widget.Clickable
 
@@ -105,32 +80,15 @@ func draw(window *app.Window) error {
 			}
 
 			frame := createLayout(gtx, theme, &startButton)
->>>>>>> Stashed changes
 
 			evntTyp.Frame(frame)
 
-<<<<<<< Updated upstream
-        title:= material.H1(theme,"Gui")
-
-
-        maroon := color.NRGBA{R:127,G:0,B:0,A:255}
-
-        title.Color = maroon
-
-        title.Alignment = text.Middle
-
-        title.Layout(gtx)
-
-        e.Frame(gtx.Ops)
-
-=======
 		}
 	}
 
 }
 
 func createLayout(gtx C, theme *material.Theme, startButton *widget.Clickable) *op.Ops {
->>>>>>> Stashed changes
 
 	layout.Flex{
 		Axis:    layout.Vertical,
