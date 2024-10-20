@@ -1,17 +1,86 @@
 package ui
 
 import (
+	"image"
 	"log"
 	"os"
 	"time"
 
 	"gioui.org/app"
+	"gioui.org/font/gofont"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/unit"
 	"gioui.org/widget"
 	"gioui.org/widget/material"
 )
+
+type EventFunction struct {
+	eventType string
+	render    func(ops *op.Ops)
+	input     func(ops *op.Ops)
+	inputSize func(ops *op.Ops, windowSize image.Point)
+	metric    func(ops *op.Ops, metric unit.Metric)
+	layout    func(gtx layout.Context) layout.Dimensions
+}
+
+// holds all application state
+type UI struct {
+	Theme *material.Theme // used to hold fonts thoughout the application
+}
+
+func NewUI() *UI {
+
+	ui := &UI{}
+
+	//load theme and fonts
+	ui.Theme = material.NewTheme(gofont.Collection())
+
+	return ui
+}
+
+func (ui *UI) Run(w *app.Window) error {
+
+	e := w.Event()
+  var ops op.Ops
+
+	//listen for events happening on the window
+	for {
+
+		//detect the type of event
+		switch eType := e.(type) {
+
+		// sent when re rendering must happen
+		case app.FrameEvent:
+
+			//gtx is used to pass around system info
+			gtx := app.NewContext(&ops, eType)
+
+			//handle all ui logic
+			ui.Layout(gtx)
+
+			//render and handler operations from ui
+			eType.Frame(gtx.Ops)
+
+			//sent when application is closed
+		case app.DestroyEvent:
+			if eType.Err != nil {
+				log.Println(eType.Err)
+				os.Exit(1)
+			}
+
+			os.Exit(0)
+
+		}
+
+	}
+
+}
+
+//Layout handles rendering and input
+func (ui *UI) Layout(gtx layout.Context) error{
+    return nil;
+}
 
 type C = layout.Context
 type D = layout.Dimensions
@@ -55,7 +124,7 @@ func draw(window *app.Window) error {
 	// defines the style and theme
 	theme := material.NewTheme()
 
-  getFromChannel(window)
+	getFromChannel(window)
 
 	// Listen for events in window
 	for {
@@ -156,13 +225,106 @@ func createChannelForBar() {
 func getFromChannel(window *app.Window) {
 	go func() {
 		for p := range progressIncrementer {
-        
-      if isBoiling && progress <1 {
-          progress+=p
-          window.Invalidate()
-      }
+
+			if isBoiling && progress < 1 {
+				progress += p
+				window.Invalidate()
+			}
 		}
 
 	}()
 
+}
+
+//controls the function
+
+func EventRouter(gtx *layout.Context, ef *EventFunction) {
+
+	switch eType := ef.eventType; eType {
+
+	case "Render":
+		ef.render(gtx.Ops)
+
+	case "Input":
+		ef.input(gtx.Ops)
+
+	case "InputSize":
+		ef.inputSize(gtx.Ops, gtx.Constraints.Max)
+	case "Metric":
+		ef.metric(gtx.Ops, gtx.Metric)
+	case "Layout":
+		ef.layout(*gtx)
+	}
+}
+
+// Handler for various types of Events
+func EventHandler(ef *EventFunction) {
+
+	// a coroutine to spin of in the main thread
+	go func() {
+		w := new(app.Window)
+
+		//ops is used to encode different operations
+		var ops op.Ops
+
+		e := w.Event()
+
+		//listen for events happening on the window
+		for {
+
+			//detect the type of event
+			switch eType := e.(type) {
+
+			// sent when re rendering must happen
+			case app.FrameEvent:
+
+				//gtx is used to pass around system info
+				gtx := app.NewContext(&ops, eType)
+
+				//render content
+				EventRouter(&gtx, ef)
+
+				//render and handler operations from ui
+				eType.Frame(gtx.Ops)
+
+				//sent when application is closed
+			case app.DestroyEvent:
+				if eType.Err != nil {
+					log.Println(eType.Err)
+					os.Exit(1)
+				}
+
+				os.Exit(0)
+
+			}
+
+		}
+	}()
+
+	app.Main()
+}
+
+// Render is a utility to start rendering a gio app
+func Render(fn func(ops *op.Ops)) {
+	EventHandler(&EventFunction{render: fn})
+}
+
+// Input is a utility to start rendering and input gio app
+func Input(fn func(ops *op.Ops)) {
+	EventHandler(&EventFunction{input: fn})
+}
+
+// Input Size is a utility to start rendering and input gio app
+func InputSize(fn func(ops *op.Ops, windowSize image.Point)) {
+	EventHandler(&EventFunction{inputSize: fn})
+}
+
+// Metric is a utility to start rendering input and metric gio app
+func Metric(fn func(ops *op.Ops, metric unit.Metric)) {
+	EventHandler(&EventFunction{metric: fn})
+}
+
+// Layout is utility to start rendering and layout widgets
+func Layout(fn func(gtx layout.Context) layout.Dimensions) {
+	EventHandler(&EventFunction{layout: fn})
 }
