@@ -1,21 +1,19 @@
-
+package ui
 
 
 //var imageData []byte
 
-var imageOp = func() paint.ImageOP{
-    
-  m,err := png.Decode(bytes.NewReader(imageData))
-  if err!=nil{
-    panic(err)
-  }
+// var imageOp = func() paint.ImageOP{
 
-  return paint.NewImage(m)
+//   m,err := png.Decode(bytes.NewReader(imageData))
+//   if err!=nil{
+//     panic(err)
+//   }
 
-}()
+//   return paint.NewImage(m)
 
+// }()
 
-func main() {
-  
+// func main() {
 
-}
+// }
