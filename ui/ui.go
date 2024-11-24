@@ -92,8 +92,12 @@ func (ui *UI) Run(w *app.Window) error {
 }
 
 // Layout handles rendering and input
-func (ui *UI) Layout(gtx layout.Context) layout.Dimensions {
-	return Title(ui.Theme, "Hello, Production").Layout(gtx)
+func (ui *UI) Layout(gtx layout.Context)  {
+	//return Title(ui.Theme, "Hello, Production").Layout(gtx)
+
+	RenderNavigationPane(gtx)
+	RenderCodePane(gtx)
+	RenderDescriptionPane(gtx)
 }
 
 // Title creates a center aligned H1.

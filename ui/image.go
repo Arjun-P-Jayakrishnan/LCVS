@@ -1,19 +1,36 @@
 package ui
 
+import (
+	"bytes"
+	_ "embed"
+	"fmt"
+	"image/png"
+	"log"
 
-//var imageData []byte
+	"gioui.org/op"       // used for recording different events
+	"gioui.org/op/paint" // paint contains operations for coloring
+	"github.com/Arjun-P-Jayakrishnan/LCVS/handlers"
+)
 
-// var imageOp = func() paint.ImageOP{
+//store image as byte array
 
-//   m,err := png.Decode(bytes.NewReader(imageData))
-//   if err!=nil{
-//     panic(err)
-//   }
 
-//   return paint.NewImage(m)
+func imageOp(imageData []byte) paint.ImageOp {
 
-// }()
+	m,err := png.Decode(bytes.NewReader(imageData))
 
-// func main() {
+	if err!= nil {
+		fmt.Println(err)
+		panic(err)
+		log.Fatal(err)
+	}
 
-// }
+	return paint.NewImageOp(m)
+}
+
+func RenderImage(path string,ops *op.Ops ) {
+	imageData:=handlers.ReadFromFileAsBytes(path)
+	imageOp(imageData).Add(ops)
+	paint.PaintOp{}.Add(ops)
+}
+
