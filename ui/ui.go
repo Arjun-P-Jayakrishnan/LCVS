@@ -1,22 +1,38 @@
 package ui
 
+import (
+	"fmt"
+	"image/color"
+	"log"
+	"os"
 
-var (
-	TitleColor = color.NGBA{R:127,G:0,B:0,A:255}
+	"gioui.org/app"
+	//"gioui.org/font/gofont"
+	"gioui.org/layout"
+	"gioui.org/op"
+	"gioui.org/text"
+	"gioui.org/unit"
+	"gioui.org/widget/material"
 )
 
-func runApp(){
+var (
+	TitleColor = color.NRGBA{R: 127, G: 0, B: 0, A: 255}
+)
+
+func RunApp() {
 	//ui loop is seperated from application window creation
 	//such that it can be used for testing
-	ui:=NewUI()
+	ui := NewUI()
+	fmt.Println("App running")
 
-	go func(){
-		w:= app.NewWindow(
-			app.Title("LCVS"),
-			app.Size(unit.Dp(800),unit.Dp(400))
-		)
+	go func() {
+		w := new(app.Window)
+		w.Option(app.Title("LCVS"))
+		w.Option(app.Size(unit.Dp(800), unit.Dp(400)))
 
-		if err:= ui.Run(w); err!=nil {
+		err := ui.Run(w)
+
+		if err != nil {
 			log.Println(err)
 			os.Exit(1)
 		}
@@ -27,68 +43,70 @@ func runApp(){
 	app.Main()
 }
 
-//UI holds all of the application state.
+// UI holds all of the application state.
 type UI struct {
 	//Theme is used to hold the fonts used throughout the application
 	Theme *material.Theme
 }
 
-//NewUI creates a new UI using the Go Fonts
-func NewUI() *UI{
+// NewUI creates a new UI using the Go Fonts
+func NewUI() *UI {
 
 	ui := &UI{}
 	//Load theme and fonts.
-	ui.Theme=material.New Theme(gofont.Collection())
+	ui.Theme = material.NewTheme()
 
 	return ui
 }
 
-//Run handles window events and renders the application.
-func(ui *UI) Run(w *app.Window) err {
+// Run handles window events and renders the application.
+func (ui *UI) Run(w *app.Window) error {
 
 	//op will be used to encode different operations.
 	var ops op.Ops
 
+	fmt.Println("event fetched")
 	//listen for events happening on the window.
-	for e:= range w.Events() {
+	for {
 
-		//detect event type 
-		switch e :=e.(type) {
+		e := w.Event()
+
+		//detect event type
+		switch eType := e.(type) {
 
 			//Frame Event: when frame is to be re-rendered
-			case system.FrameEvent:
+			case app.FrameEvent:
 				//gtx is used to pass around rendering and event information.
-				gtx:=layout.NewContext(&ops,e)
+				gtx := app.NewContext(&ops, eType)
 				//handle all UI logic.
 				ui.Layout(gtx)
 				//render and handle the operations from the UI.
-				e.Frame(gtx.Ops)
+				eType.Frame(gtx.Ops)
 			// this is sent when the application is closed
-			case system.DestroyEvent:
-				return e.Err
+			case app.DestroyEvent:
+				return eType.Err
 		}
 
 	}
 
-	return nil
-} 
-
-
-//Layout handles rendering and input
-func (ui *UI) Layout(gtx layout.Context) layout.Dimensions {
-	return Title(ui.Theme,"Hello, Production").Layout(gtx)
 }
 
+// Layout handles rendering and input
+func (ui *UI) Layout(gtx layout.Context)  {
+	//return Title(ui.Theme, "Hello, Production").Layout(gtx)
 
-//Title creates a center aligned H1.
-func Title(th *material.Theme,caption string) material.LabelStyle {
-	label := material.H1(th,caption)
+	RenderNavigationPane(gtx)
+	RenderCodePane(gtx)
+	RenderDescriptionPane(gtx)
+}
+
+// Title creates a center aligned H1.
+func Title(th *material.Theme, caption string) material.LabelStyle {
+	label := material.H1(th, caption)
 	label.Color = TitleColor
-	label.Alignment=text.Middle
+	label.Alignment = text.Middle
 	return label
 }
-
-
 
 // type EventFunction struct {
 // 	eventType string

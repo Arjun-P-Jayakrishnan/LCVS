@@ -68,8 +68,6 @@ github.com/go-text/typesetting/opentype/tables
 github.com/go-text/typesetting/segmenter
 github.com/go-text/typesetting/shaping
 github.com/go-text/typesetting/unicodedata
-# github.com/go-text/typesetting-utils v0.0.0-20240329101916-eee87fb235a3
-## explicit; go 1.16
 # golang.org/x/exp v0.0.0-20240707233637-46b078467d37
 ## explicit; go 1.20
 golang.org/x/exp/constraints

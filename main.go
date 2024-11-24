@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
- handler.runRouter()
-  ui.runApp()
+
+  ui.RunApp()
 }
