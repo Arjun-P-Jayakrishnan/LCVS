@@ -8,11 +8,6 @@ import (
 
 func main() {
 
-  internal.AppUI.RunApp(func(gtx internal.Context) error {
- 
-    ui.RenderNavigationPane(*gtx)
-    
-    return nil
-  })
+  internal.AppUI.RunApp(ui.Layout)
   
 }

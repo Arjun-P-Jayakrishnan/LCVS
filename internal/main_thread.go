@@ -2,28 +2,22 @@ package internal
 
 import (
 	"fmt"
-	"image/color"
 	"log"
 	"os"
-
 	"gioui.org/app"
 	//"gioui.org/font/gofont"
 	"gioui.org/layout"
 	"gioui.org/op"
-	"gioui.org/text"
 	"gioui.org/unit"
-	"gioui.org/widget/material"
+	
 )
 
-type Context *layout.Context 
+ 
 //Logic for how UI should look like should be written inside
-type Layout func(gtx Context) error
-
-
+type Layout func(gtx *layout.Context) layout.Dimensions
 
 type UI struct {
-	//theme to be called
-	Theme *material.Theme
+	
 	//the context for the graphical pipeline
 	GTX   *layout.Context
 	//render function
@@ -31,22 +25,7 @@ type UI struct {
 }
 
 
-
-var (
-	titleColor = color.NRGBA{R: 127, G: 0, B: 0, A: 255}
-)
-
-var AppUI = UI{
-	Theme: material.NewTheme(),
-}
-
-/*
-	Configure the ui theme
-*/
-func (ui UI) Configure() error {
-
-	return nil
-}
+var AppUI = &UI{}
 
 /*
 	Running the main app thread
@@ -122,11 +101,5 @@ func (ui *UI) handleEvents(w *app.Window) error {
 }
 
 
-// Title creates a center aligned H1.
-func title(th *material.Theme, caption string) material.LabelStyle {
-	label := material.H1(th, caption)
-	label.Color = titleColor
-	label.Alignment = text.Middle
-	return label
-}
+
 
