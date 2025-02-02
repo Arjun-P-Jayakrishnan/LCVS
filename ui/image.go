@@ -21,8 +21,9 @@ func imageOp(imageData []byte) paint.ImageOp {
 
 	if err!= nil {
 		fmt.Println(err)
-		panic(err)
 		log.Fatal(err)
+		panic(err)
+		
 	}
 
 	return paint.NewImageOp(m)
