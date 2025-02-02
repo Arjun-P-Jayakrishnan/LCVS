@@ -15,8 +15,9 @@ import (
 	"gioui.org/widget/material"
 )
 
+type Context *layout.Context 
 //Logic for how UI should look like should be written inside
-type Layout func() error
+type Layout func(gtx Context) error
 
 
 
@@ -24,7 +25,7 @@ type UI struct {
 	//theme to be called
 	Theme *material.Theme
 	//the context for the graphical pipeline
-	gtx    layout.Context
+	GTX   *layout.Context
 	//render function
 	renderLayout Layout
 }
@@ -104,9 +105,9 @@ func (ui *UI) handleEvents(w *app.Window) error {
 				//gtx is used to pass around rendering and event information.
 				gtx := app.NewContext(&ops, eType)
 				//graphics context
-				ui.gtx=gtx
+				ui.GTX=&gtx
 				//handle all UI logic.
-				ui.renderLayout()
+				ui.renderLayout(&gtx)
 				//render and handle the operations from the UI.
 				eType.Frame(gtx.Ops)
 			/*
