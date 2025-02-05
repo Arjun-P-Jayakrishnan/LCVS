@@ -30,7 +30,7 @@ func RenderNavigationPane(globalContext Context) layout.Dimensions {
 			return border.Layout(*globalContext.gtx,
 
 				func(gtx layout.Context) layout.Dimensions {
-					return material.H1(globalContext.Theme, "Sidepane").Layout(*globalContext.gtx)
+					return material.H3(globalContext.Theme, "Sidepane").Layout(*globalContext.gtx)
 				})
 			//return material.H1(globalContext.Theme,"Sidepane").Layout(*globalContext.gtx)
 		}),
