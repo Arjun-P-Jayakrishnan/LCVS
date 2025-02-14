@@ -1,10 +1,13 @@
 package main
 
-import (	
-  "github.com/Arjun-P-Jayakrishnan/LCVS/ui"
+import (
+	"github.com/Arjun-P-Jayakrishnan/LCVS/internal"
+	"github.com/Arjun-P-Jayakrishnan/LCVS/ui"
 )
+
 
 func main() {
 
-  ui.RunApp()
+  internal.AppUI.RunApp(ui.Layout)
+  
 }
