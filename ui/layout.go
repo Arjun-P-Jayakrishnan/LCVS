@@ -1,6 +1,7 @@
 package ui
 
 import (
+	//"image"
 	"image/color"
 
 	"gioui.org/layout"
@@ -14,27 +15,41 @@ type Widget func(gtx layout.Context) layout.Dimensions
 /*
 * renders the side pane used for file navigation or ticket
  */
-func RenderNavigationPane(globalContext Context) layout.Dimensions {
-	//RenderImage("./assets/gamer.png",gtx.Ops)
+func RenderNavigationPane(globalContext Context, width int) layout.Dimensions {
+	gtx := *globalContext.gtx
+
+	size := context.gtx.Constraints.Max
+	size.X = size.X / width
+
+	gtx.Constraints.Min = size
+	//
 	border := widget.Border{
 		Color:        color.NRGBA{R: 204, G: 204, B: 204, A: 255},
-		CornerRadius: unit.Dp(3),
+		CornerRadius: unit.Dp(0),
 		Width:        unit.Dp(1),
 	}
 
-	return layout.Flex{
-		Axis:      layout.Vertical,
-		Alignment: layout.Middle,
-	}.Layout(*globalContext.gtx,
-		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			return border.Layout(*globalContext.gtx,
+	return border.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
 
-				func(gtx layout.Context) layout.Dimensions {
-					return material.H3(globalContext.Theme, "Sidepane").Layout(*globalContext.gtx)
-				})
-			//return material.H1(globalContext.Theme,"Sidepane").Layout(*globalContext.gtx)
-		}),
-	)
+		return layout.Flex{
+			Axis:      layout.Vertical,
+			Alignment: layout.Middle,
+		}.Layout(gtx,
+
+			layout.Rigid(func(_gtx layout.Context) layout.Dimensions {
+
+				return material.H3(globalContext.Theme, "Sidepane").Layout(_gtx)
+
+				//return material.H1(globalContext.Theme,"Sidepane").Layout(*globalContext.gtx)
+			}),
+			layout.Flexed(1, func(_gtx layout.Context) layout.Dimensions {
+				//RenderImage("./assets/gamer.png", _gtx.Ops)
+
+				return material.H1(globalContext.Theme, "Sidepane").Layout(_gtx)
+			}),
+		)
+
+	})
 
 }
 
