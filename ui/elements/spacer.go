@@ -1,4 +1,4 @@
-package ui
+package elements
 
 import (
 	"gioui.org/layout"
@@ -7,16 +7,16 @@ import (
 /**/
 type SpacerProps struct{
 	//graphical context
-	gtx layout.Context;
+	Gtx layout.Context;
 	//inset the spacing amount
-	inset layout.Inset;
+	Inset layout.Inset;
 	//the widgets to be rendered inside
-	child layout.Widget;
+	Child layout.Widget;
 }
 
 /*
 	Create  a spacer
 */
 func Spacer(props SpacerProps) layout.Dimensions{
-	return props.inset.Layout(props.gtx,props.child)
+	return props.Inset.Layout(props.Gtx,props.Child)
 }

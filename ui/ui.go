@@ -4,9 +4,9 @@ import (
 	//"image"
 	//"image/color"
 	"gioui.org/layout"
+	"github.com/Arjun-P-Jayakrishnan/LCVS/ui/elements"
 	//"gioui.org/unit"
 	"gioui.org/widget/material"
-
 	//"fmt"
 	//"gioui.org/widget" // widget contains state for different widgets
 )
@@ -26,11 +26,11 @@ Logic for the rendering is written here
 func Layout(gtx *layout.Context) layout.Dimensions {
 	context.gtx = *gtx
 
-	return Spacer(
-		SpacerProps{
-			gtx:   context.gtx,
-			inset: layout.UniformInset(1),
-			child: func(spacerContext layout.Context) layout.Dimensions {
+	return elements.Spacer(
+		elements.SpacerProps{
+			Gtx:   context.gtx,
+			Inset: layout.UniformInset(0),
+			Child: func(spacerContext layout.Context) layout.Dimensions {
 				return layout.Flex{
 					Axis:      layout.Horizontal,
 					Alignment: layout.Middle,
