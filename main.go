@@ -1,13 +1,21 @@
 package main
 
 import (
-	"github.com/Arjun-P-Jayakrishnan/LCVS/internal"
-	"github.com/Arjun-P-Jayakrishnan/LCVS/ui"
+	"log"
+
+	//"github.com/Arjun-P-Jayakrishnan/LCVS/internal"
+	"github.com/Arjun-P-Jayakrishnan/LCVS/p2p"
+	//"github.com/Arjun-P-Jayakrishnan/LCVS/ui"
 )
 
 
 func main() {
-
-  internal.AppUI.RunApp(ui.Layout)
+	tr:=p2p.NewTCPTransport(":3000")
+	if err:=tr.ListenAndAccept();err !=nil{
+		log.Fatal(err)
+	}
+	
+	select{}
+ // internal.AppUI.RunApp(ui.Layout)
   
 }
