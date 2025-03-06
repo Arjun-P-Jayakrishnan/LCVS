@@ -1,3 +1,4 @@
 LCVS
 .env
 vendor/
+bin/
