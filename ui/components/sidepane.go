@@ -79,7 +79,7 @@ func Sidepane(props SidepaneProps) layout.Dimensions {
 	//Initialize the tiles
 	for i := 0; i < len(props.Tiles)+1; i++ {
 		tiles[i] = layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-			gtx.Constraints.Max = props.Gtx.Constraints.Max
+			gtx.Constraints.Max.X = props.Gtx.Constraints.Max.X*6
 			tile := Tile{
 				Gtx:   gtx,
 				Theme: props.Theme,
