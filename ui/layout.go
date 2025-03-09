@@ -1,98 +1,67 @@
 package ui
 
 import (
-	//"image"
 	"image/color"
 
 	"gioui.org/layout"
-	"gioui.org/unit"
-	"gioui.org/widget"
 	"gioui.org/widget/material"
-
 	"github.com/Arjun-P-Jayakrishnan/LCVS/ui/components"
 	"github.com/Arjun-P-Jayakrishnan/LCVS/ui/elements"
 )
 
-type SidepaneProps struct {
-	//Context for the sidepane
-	gtx layout.Context
-	//The global theme
-	theme material.Theme
-	//if any child widgets need to be rendered
-	child layout.Widget
+// Context is for the global state of the application
+type Context struct {
+	//The theme of the entire application
+	Theme *material.Theme
+	//Graphical context
+	gtx *layout.Context
 }
 
-func Sidepane(props SidepaneProps) layout.Dimensions {
+// Creates a new Context whenever the new window is created
+func NewContext(gtx *layout.Context) *Context {
+	return &Context{
+		Theme: material.NewTheme(),
+		gtx:   gtx,
+	}
+}
 
-	return elements.Border(elements.BorderProps{
-		Gtx: props.gtx,
-		Border: widget.Border{
-			Color:        color.NRGBA{R: 204, G: 204, B: 204, A: 255},
-			CornerRadius: unit.Dp(0),
-			Width:        unit.Dp(0),
-		},
-		// Child: func(gtx1 layout.Context) layout.Dimensions {
-		// 	return layout.Flex{
-		// 		Axis:      layout.Vertical,
-		// 		Alignment: layout.Middle,
-		// 		Spacing:   layout.SpaceEvenly,
-		// 	}.Layout(gtx1,
+// Allows user to create the application widgets using the graphical context
+func Layout(gtx *layout.Context) layout.Dimensions {
+	context := NewContext(gtx)
 
-		// 		layout.Rigid(func(_gtx layout.Context) layout.Dimensions {
 
-		// 			return material.H3(&props.theme, "Sidepane").Layout(_gtx)
+	
 
-		// 			//return material.H1(globalContext.Theme,"Sidepane").Layout(*globalContext.gtx)
-		// 		}),
-		// 		layout.Rigid(func(_gtx layout.Context) layout.Dimensions {
-		// 			//RenderImage("./assets/gamer.png", _gtx.Ops)
+	return elements.Background(elements.BackgroundProps{
+		Gtx:             *gtx,
+		BackgroundColor: color.NRGBA{R:225,G:225,B:225,A:255},
+		Child: func(gtx layout.Context) layout.Dimensions {
+			return layout.Flex{
+				Axis:      layout.Horizontal,
+				Alignment: layout.Middle,
+				Spacing:   layout.SpaceEnd,
+			}.Layout(gtx,
+				//Sidepane
+				layout.Rigid(func(_gtx layout.Context) layout.Dimensions {
+					_gtx.Constraints.Max.X = gtx.Constraints.Max.X / 6
 
-		// 			return material.H1(&props.theme, "Sidepane").Layout(_gtx)
-		// 		}),
-		// 	)
-		// },
+					return components.Sidepane(components.SidepaneProps{
+						Gtx:   _gtx,
+						Theme: *context.Theme,
+						Hero: components.Hero{
+				
+						},
+						Tiles: make([]components.Tile, 1),
+					})
+				}),
+				//Main Area
+				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+					//gtx.Constraints.Min.X = gtx.Constraints.Max.X / 6
 
-		Child:func(gtx layout.Context) layout.Dimensions {
-			return  components.Sidepane(components.SidepaneProps{
-				Gtx:gtx ,
-				Hero: components.Hero{},
-				Tiles: []components.Tile{
-					components.Tile{
-						Gtx: gtx,
-						Theme: props.theme,
-						Label: "Hi",
-					},
-					components.Tile{
-						Gtx:gtx,
-						Theme: props.theme,
-						Label: "Hello",
-					},
-				},
-				Theme: props.theme,
-			})
+					return material.Body1(context.Theme, "Main").Layout(gtx)
+				}),
+			)
 		},
 	})
-
-}
-
-/*
-* renders the side pane used for file navigation or ticket
- */
-func RenderNavigationPane(globalContext Context) {
-
-}
-
-/*
-Code pane is where all code related viewing is to be done
-*/
-func RenderCodePane(gtx layout.Context) {
-
-}
-
-/*
-Description Pane is where you can add your description of code or
-provide a markdown editor to showcase your breakdown of problem
-*/
-func RenderDescriptionPane(gtx layout.Context) {
 
 }

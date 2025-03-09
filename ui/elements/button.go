@@ -13,7 +13,8 @@ type ButtonProps struct{
 }
 
 func Button(props ButtonProps) layout.Dimensions{
-	btn :=material.Button(&props.Theme,&widget.Clickable{},props.Label)
-
+	btn :=material.Button(&props.Theme,new(widget.Clickable),props.Label)
+	props.Gtx.Constraints.Max.X*=6;
 	return btn.Layout(props.Gtx)
 }
+
