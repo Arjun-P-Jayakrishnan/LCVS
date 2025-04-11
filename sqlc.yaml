@@ -1,0 +1,10 @@
+version: "2"
+sql:
+  - engine: "sqlite"
+    schema: "migrations/001_init_schema.sql"
+    queries: "queries/"
+    gen:
+      go:
+        package: "sqlc"
+        out: "data/sqlc"
+        emit_json_tags: true
