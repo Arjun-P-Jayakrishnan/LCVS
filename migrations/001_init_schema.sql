@@ -1,0 +1,20 @@
+-- +goose Up 
+CREATE TABLE IF NOT EXISTS projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    root_path TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+);
+
+
+CREATE TABLE IF NOT EXISTS versions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id INTEGER,
+    version_path TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(project_id) REFERENCES projects(id)
+);
+
+-- +goose Down
+DROP TABLE IF EXISTS versions;
+DROP TABLE IF EXISTS projects;
