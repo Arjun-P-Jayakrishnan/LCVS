@@ -2,28 +2,32 @@ package ui
 
 import (
 	"gioui.org/layout"
+	"gioui.org/widget/material"
+	"github.com/Arjun-P-Jayakrishnan/LCVS/internal"
 )
 
-/*
-* renders the side pane used for file navigation or ticket
- */
-func RenderNavigationPane(gtx layout.Context) {
-	RenderImage("./assets/gamer.png",gtx.Ops)
-}
+func Layout(gtx layout.Context,theme *material.Theme,state *internal.AppState) layout.Dimensions{
 
+	
 
+	return layout.Flex{Axis:layout.Horizontal}.Layout(gtx,
+	
 
-/*
-	Code pane is where all code related viewing is to be done
-*/
-func RenderCodePane(gtx layout.Context) {
+		layout.Rigid(func(gtx layout.Context) layout.Dimensions {
+			width := gtx.Constraints.Max.X/5
+			gtx.Constraints.Min.X=width
+			gtx.Constraints.Max.X=width
 
-}
+			return InitFileNav(gtx,theme,state.FileManager)
+		}),
+		
+		layout.Flexed(0.5,func(gtx layout.Context) layout.Dimensions {
+			return Editor(gtx,theme)
+		}),
 
-/*
-	Description Pane is where you can add your description of code or
-	provide a markdown editor to showcase your breakdown of problem
-*/
-func RenderDescriptionPane(gtx layout.Context) {
+		layout.Flexed(0.3,func(gtx layout.Context) layout.Dimensions {
+			return Diagram(gtx,theme)
+		}),
+	)
 
 }
